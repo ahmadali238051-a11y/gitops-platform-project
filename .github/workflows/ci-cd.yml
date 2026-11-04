@@ -48,11 +48,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # Step 7: Build Docker image
-      - name: Build Docker Image
+      # Build and push multi-platform image
+      - name: Build and Push Multi-Platform Image
         if: github.event_name == 'push'
-        run: |
-          docker build -t w616/production-gitops-platform:v1 .
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: w616/production-gitops-platform:v1
 
       # Step 8: Push Docker image
       - name: Push Docker Image
